@@ -6,20 +6,21 @@ import { promisify } from "node:util";
 import { api, json } from "./api.js";
 const derive = promisify(scrypt),
   hash = (s) => createHash("sha256").update(s).digest("hex");
-export function localApi(dir = ".tomato") {
+export function localApi(dir = process.env.VERCEL ? "/tmp/.tomato" : ".tomato") {
   mkdirSync(dir, { recursive: true });
   const sql = new DatabaseSync(dir + "/workspace.sqlite");
   sql.exec(
     "PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS local_migrations(name TEXT PRIMARY KEY); CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE NOT NULL,salt TEXT NOT NULL,pw TEXT NOT NULL,admin INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,user_id TEXT NOT NULL,expires INTEGER NOT NULL);",
   );
-  for (const f of readdirSync("drizzle")
+  const drizzleDir = new URL("../drizzle", import.meta.url);
+  for (const f of readdirSync(drizzleDir)
     .filter((f) => f.endsWith(".sql"))
     .sort()) {
     if (sql.prepare("SELECT name FROM local_migrations WHERE name=?").get(f))
       continue;
     sql.exec("BEGIN");
     try {
-      sql.exec(readFileSync("drizzle/" + f, "utf8"));
+      sql.exec(readFileSync(new URL("../drizzle/" + f, import.meta.url), "utf8"));
       sql.prepare("INSERT INTO local_migrations VALUES(?)").run(f);
       sql.exec("COMMIT");
     } catch (e) {
