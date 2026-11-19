@@ -1,0 +1,8 @@
+node_modules
+dist
+.sites-runtime
+.tomato/
+.env
+.env.*
+*.local
+

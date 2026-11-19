@@ -1,0 +1,37 @@
+{
+  "name": "tomato-stats",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build && node scripts/build-worker.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "check:data": "node --test scripts/check-data.mjs",
+    "db:generate": "drizzle-kit generate",
+    "prebuild": "node scripts/clean-build.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.2.5",
+    "@fontsource-variable/dm-sans": "5.2.6",
+    "html2canvas": "1.4.1",
+    "jspdf": "3.0.4",
+    "lucide-react": "0.468.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.1",
+    "recharts": "2.15.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.4.1",
+    "autoprefixer": "10.4.21",
+    "drizzle-kit": "0.31.8",
+    "drizzle-orm": "0.44.7",
+    "postcss": "8.5.6",
+    "tailwindcss": "3.4.17",
+    "vite": "6.4.1"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}
