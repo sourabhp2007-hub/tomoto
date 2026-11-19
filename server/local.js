@@ -42,7 +42,7 @@ export function localApi(dir = ".tomato") {
     },
   };
   const attempts = new Map();
-  return async (req, res, next) => {
+  const handler = async (req, res, next) => {
     if (!req.url?.startsWith("/api/")) return next();
     try {
       const url = new URL(req.url, "http://localhost"),
@@ -187,4 +187,6 @@ export function localApi(dir = ".tomato") {
       res.end(JSON.stringify({ error: "Could not process this request." }));
     }
   };
+  handler.close = () => sql.close();
+  return handler;
 }

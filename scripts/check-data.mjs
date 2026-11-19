@@ -239,6 +239,7 @@ test("local registration, session recovery, reload, logout and sign-in", async (
       record: { ...post, account: saved.id },
     });
     assert.equal(stored[0], 200);
+    serve?.close?.();
     serve = localApi(dir);
     assert.equal((await send("workspace"))[1].doc.posts[0].views, 1000);
     const [s, prices] = await send("pricing", {
@@ -264,6 +265,7 @@ test("local registration, session recovery, reload, logout and sign-in", async (
     assert.equal((await send("login", credentials))[0], 200);
     assert.equal((await send("workspace"))[1].doc.accounts.length, 1);
   } finally {
+    serve?.close?.();
     rmSync(dir, { recursive: true, force: true });
   }
 });
